@@ -1,0 +1,103 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-header {
+  background-color: #280e2f;
+  color: #fff;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00d1b2;
+
+}
+.logo img{
+  height: 100px;
+  width: auto;
+  border-radius: 6px;
+  margin-top: 10px;
+  margin-left: 30px;
+}
+.logo p{
+  margin-left: 25px;
+}
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.navbar a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.navbar a:hover {
+  color: #00d1b2;
+}
+
+
+.hero {
+  background: linear-gradient(rgb(223 156 156 / 84%), rgba(0, 0, 0, 0.6));
+   /* url('../assets/hero-bg.jpg') no-repeat center center/cover; */
+  color: #ffffff;
+  padding: 100px 40px;
+  text-align: center;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.hero-content p {
+  font-size: 18px;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+
+@media (max-width: 768px) {
+  /* Hero Section */
+  .hero {
+    padding: 60px 20px;
+  }
+
+  .hero-content h1 {
+    font-size: 32px;
+  }
+
+  .hero-content p {
+    font-size: 14px;
+    max-width: 100%;
+  }
+
+  /* Features Section (if applicable) */
+  .features {
+    flex-direction: column;
+    gap: 30px;
+    padding: 40px 20px;
+  }
+
+  .feature-box {
+    width: 100%;
+  }
+}
+

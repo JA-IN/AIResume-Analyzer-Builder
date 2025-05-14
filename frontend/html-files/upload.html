@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Resume</title>
+
+    <link rel="stylesheet" href="/frontend/style-files/upload.css" />
+    <link rel="stylesheet" href="/frontend/style-files/common-responsive.css" />
+    <link rel="stylesheet" href="/frontend/style-files/style.css" />
+    <link rel="stylesheet" href="/frontend/style-files/analyze.css">
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="logo">
+        <img src="/frontend/assets/ai resume logo.webp" alt="Logo" />
+        <p>AI Resume</p>
+      </div>
+      <div class="navbar">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="upload.html" class="active">Upload Resume</a></li>
+          <li><a href="resume-build.html">Build Resume</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+
+        <button id="analyse-resume-btn">Analyse Resume</button>
+
+    </header>
+
+    <section class="upload-section">
+      <div class="upload-container">
+        <h2>Upload Your Resume</h2>
+        <p>Supported formats: PDF</p>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+          <input type="file" name="resume" accept=".pdf" required />
+          <button type="submit">Upload</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Result analysis section-->
+    <section class="analysis-section">
+      
+      <div id="analyse-result" class="analysis-result">
+        <!-- The analysis results will be inserted here dynamically -->
+      </div>
+    </section>
+
+    <script src="/frontend/javascript-files/upload.js"></script>
+  </body>
+</html>

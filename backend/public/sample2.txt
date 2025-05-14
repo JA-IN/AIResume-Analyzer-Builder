@@ -1,0 +1,219 @@
+document.addEventListener("DOMContentLoaded", () => {
+  // Form submit event
+  document
+    .getElementById("resumeForm")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      console.log("Form submitted");
+
+      const data = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+
+        education: [
+          {
+            degree: document.getElementById("degree").value,
+            institute: document.getElementById("institution").value,
+            year: document.getElementById("year").value,
+          },
+        ],
+        experience: [
+          {
+            job: document.getElementById("job").value,
+            company: document.getElementById("company").value,
+            duration: document.getElementById("duration").value,
+          },
+        ],
+        achievements: [
+          {
+            project: document.getElementById("project").value,
+            certification: document.getElementById("certifications").value,
+          },
+        ],
+        skills: document.getElementById("skills").value,
+      };
+
+      try {
+        const response = await fetch(
+          "http://localhost:2000/api/resumeForm/auto-generate",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          }
+        );
+
+        const result = await response.json();
+
+        const resumeHTML = `
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+            color: #333;
+          }
+          .container {
+            background: white;
+            padding: 30px 40px;
+            max-width: 800px;
+            margin: auto;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+          }
+          h1, h2 {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 30px;
+          }
+          h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+          }
+          p, li {
+            font-size: 16px;
+            line-height: 1.6;
+          }
+          ul {
+            padding-left: 20px;
+          }
+          .contact-info {
+            margin-bottom: 20px;
+            font-style: italic;
+          }
+          .section {
+            margin-top: 25px;
+          }
+          .highlight {
+            background: #eef6ff;
+            padding: 10px;
+            border-left: 4px solid #2196F3;
+          }
+          button.download-btn {
+            margin: 20px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          }
+          button.download-btn:hover {
+            background-color: #0056b3;
+          }
+          @media print {
+            .download-btn, .theme-toggle-btn {
+              display: none;
+            }
+          }
+        </style>
+
+        <div class="container">
+          <h1>${result.name}</h1>
+          <p class="contact-info">${result.email} | ${result.phone}</p>
+
+          <div class="section">
+            <h2>Professional Summary</h2>
+            <p>${result.summary}</p>
+          </div>
+
+          <div class="section">
+            <h2>Skills</h2>
+            <p>${result.skills}</p>
+          </div>
+
+          <div class="section">
+            <h2>Education</h2>
+            <ul>
+              ${result.education
+                .map(
+                  (e) => `<li>${e.degree} at ${e.institute} (${e.year})</li>`
+                )
+                .join("")}
+            </ul>
+          </div>
+
+          <div class="section">
+            <h2>Experience</h2>
+            <ul>
+              ${result.experience
+                .map((e) => `<li>${e.job} at ${e.company} (${e.duration})</li>`)
+                .join("")}
+            </ul>
+          </div>
+
+          <div class="section">
+            <h2>Achievements</h2>
+            <ul>
+              ${result.achievements
+                .map(
+                  (a) =>
+                    `<li>Project: ${a.project}, Certification: ${a.certification}</li>`
+                )
+                .join("")}
+            </ul>
+          </div>
+
+          <div class="section highlight">
+            <h2>AI Suggestions</h2>
+            <p><strong>Skills to Learn:</strong> ${result.skillsToLearn}</p>
+            <p><strong>Suggested Job Roles:</strong> ${result.jobRoles}</p>
+          </div>
+        </div>
+      `;
+
+        document.getElementById("resume-content").innerHTML = resumeHTML;
+        document.getElementById("generated-resume-section").style.display =
+          "block";
+
+        // ✅ Add event listener after resume is rendered
+        const downloadBtn = document.getElementById("downloadResume");
+        if (downloadBtn) {
+          downloadBtn.addEventListener("click", () => {
+            console.log("Download button clicked and html2pdf() called");
+
+            const resumeElement = document.getElementById("resume-content");
+            const options = {
+              margin: 0.5,
+              filename: "my-resume.pdf",
+              image: { type: "jpeg", quality: 0.98 },
+              html2canvas: { scale: 2 },
+              jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+            };
+
+            // ✅ Wait for rendering to complete
+            requestAnimationFrame(() => {
+              setTimeout(() => {
+                console.log("Resume height:", resumeElement.offsetHeight);
+
+                html2pdf()
+                  .from(resumeElement)
+                  .set({
+                    margin: 0.5,
+                    filename: "my-resume.pdf",
+                    image: { type: "jpeg", quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: {
+                      unit: "in",
+                      format: "letter",
+                      orientation: "portrait",
+                    },
+                  })
+                  .outputPdf()
+                  .then((pdf) => {
+                    console.log("PDF Generated Successfully");
+                    const blob = new Blob([pdf], { type: "application/pdf" });
+                    const url = URL.createObjectURL(blob);
+                    window.open(url); // Opens preview in new tab
+                  });
+              }, 300); // Slight delay ensures content is painted
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Error generating resume:", error);
+      }
+    });
+});
